@@ -60,16 +60,21 @@ PDX is engineered to use **Groq Cloud API** for ultra-fast, low-latency LLM infe
 ## ✨ 3. Key Features
 
 * **ChatGPT-Style Conversational Interface**: Distraction-free, warm off-white minimalist UI with a sleek charcoal palette inspired by ChatGPT and modern component design libraries (21st.dev, Aceternity).
+
 * **Real-Time Token Streaming**: Real-time token streaming using Groq's high-throughput API and Streamlit's streaming architecture.
+
 * **Verifiable Document Citations**: Every answer is grounded in retrieved excerpts, explicitly showing the source document filename, exact page number, similarity percentage, and preview text.
+
 * **Strict Grounding & Zero Hallucination**: If the query cannot be answered from the uploaded context, PDX strictly refuses with:
   > *"I couldn't find sufficient information in your uploaded documents."*
+
 * **One-Click Suggested Prompts**: Fast exploration cards for instant answers:
   - *"Summarize my document."*
   - *"Explain the important concepts."*
   - *"Find specific information."*
   - *"Generate questions from my document."*
 * **Multi-Document PDF Management**: Ingest multiple PDFs simultaneously with live page counts and chunk metrics. Remove individual documents with dynamic FAISS index rebuilding.
+
 * **Privacy-First Local Embeddings**: Uses HuggingFace `sentence-transformers/all-MiniLM-L6-v2` locally for zero API embedding costs, sub-millisecond retrieval, and complete document privacy.
 
 ---
