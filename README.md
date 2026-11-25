@@ -1,8 +1,8 @@
-# RogeX – AI-Powered Document Intelligence & RAG Chatbot
+# PDX – AI-Powered Document Intelligence & RAG Chatbot
 
 <div align="center">
 
-# ⚡ RogeX
+# ⚡ PDX
 ### *"Your Documents. Your AI. Your Answers."*
 
 **A Minimalist, ChatGPT-Style Conversational AI Chatbot with Strict Retrieval-Augmented Generation (RAG)**
@@ -25,7 +25,7 @@
 Traditional Large Language Models (LLMs) suffer from hallucinations, lack access to private enterprise documents, and often invent plausible-sounding facts and fictitious academic citations. Furthermore, existing document search tools often force users into complicated, cluttered dashboards full of unnecessary graphs, distraction-heavy animations, and confusing multi-page navigation when all the user wants is a simple, intuitive conversation with their documents.
 
 ### Project Objective
-**RogeX** solves this problem by delivering a clean, minimalist, ChatGPT-style conversational AI experience powered by an actual, production-ready Retrieval-Augmented Generation (RAG) pipeline. Users can upload one or multiple PDF documents, ask questions in plain language, and receive accurate, intelligent answers grounded exclusively in their uploaded texts.
+**PDX** solves this problem by delivering a clean, minimalist, ChatGPT-style conversational AI experience powered by an actual, production-ready Retrieval-Augmented Generation (RAG) pipeline. Users can upload one or multiple PDF documents, ask questions in plain language, and receive accurate, intelligent answers grounded exclusively in their uploaded texts.
 
 ---
 
@@ -34,7 +34,7 @@ Traditional Large Language Models (LLMs) suffer from hallucinations, lack access
 * **💬 ChatGPT-Style Conversational Interface**: Distraction-free, warm off-white minimalist UI inspired by ChatGPT and modern component design libraries (21st.dev, Aceternity). No moving backgrounds, no particles, no clutter.
 * **⚡ Real-Time Token Streaming**: Real-time response streaming using the official Google Gen AI SDK (`google-genai`) and Streamlit's streaming architecture.
 * **📚 Verifiable Document Citations**: Every answer is grounded in retrieved excerpts, explicitly showing the source document filename, exact page number, similarity percentage, and preview text.
-* **🛡️ Strict Grounding & Zero Hallucination**: If the query cannot be answered from the uploaded context, RogeX strictly refuses with:
+* **🛡️ Strict Grounding & Zero Hallucination**: If the query cannot be answered from the uploaded context, PDX strictly refuses with:
   > *"I couldn't find sufficient information in your uploaded documents."*
 * **💡 One-Click Suggested Prompts**: Fast exploration cards for instant answers:
   - *"Summarize my document."*
@@ -89,7 +89,7 @@ flowchart TD
 
 ---
 
-## 🔬 5. How RAG Works in RogeX
+## 🔬 5. How RAG Works in PDX
 
 1. **PDF Parsing & Ingestion**:
    When you upload a PDF, `PDFProcessor` reads raw bytes via `pypdf`, checks for encryption or corrupted streams, and extracts text page-by-page while preserving exact page indices and character counts.
@@ -100,7 +100,7 @@ flowchart TD
 4. **FAISS Vector Indexing**:
    Normalized vectors are stored in a `faiss.IndexFlatIP` index alongside the chunk metadata.
 5. **Similarity Retrieval**:
-   When the user submits a question, RogeX computes the question's query vector and executes a k-nearest neighbor search in FAISS, retrieving the top 4 most relevant chunks.
+   When the user submits a question, PDX computes the question's query vector and executes a k-nearest neighbor search in FAISS, retrieving the top 4 most relevant chunks.
 6. **Strictly Grounded Synthesis**:
    If chunks meet the similarity threshold, they are formatted as numbered document excerpts. The official `google-genai` client streams tokens back to the user with low temperature ($0.1$) to prevent hallucination.
 7. **Attribution Display**:
@@ -111,7 +111,7 @@ flowchart TD
 ## 📁 6. Project Structure
 
 ```
-RogeX/
+PDX/
 │
 ├── app.py                      # Main ChatGPT-style Streamlit web application
 ├── rag.py                      # End-to-end RAG engine (PyPDF, LangChain, FAISS, Gemini)
@@ -133,7 +133,7 @@ RogeX/
 
 ## 🎨 7. Design System & Color Palette
 
-RogeX adheres strictly to a clean, warm off-white ChatGPT-inspired aesthetic:
+PDX adheres strictly to a clean, warm off-white ChatGPT-inspired aesthetic:
 
 | Element | Color Hex | Visual Purpose |
 | :--- | :--- | :--- |
@@ -155,8 +155,8 @@ RogeX adheres strictly to a clean, warm off-white ChatGPT-inspired aesthetic:
 
 ### Step 1: Clone or Open the Repository
 ```bash
-git clone https://github.com/your-username/RogeX.git
-cd RogeX
+git clone https://github.com/your-username/PDX.git
+cd PDX
 ```
 
 ### Step 2: Create and Activate a Virtual Environment
@@ -218,7 +218,7 @@ The application will start and open automatically in your browser at:
 
 ## 🧪 11. Automated Testing & Verification
 
-RogeX includes a comprehensive 10-point test suite (`test_rag_pipeline.py`) that validates the complete pipeline:
+PDX includes a comprehensive 10-point test suite (`test_rag_pipeline.py`) that validates the complete pipeline:
 
 ```bash
 python test_rag_pipeline.py

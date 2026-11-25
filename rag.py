@@ -1,4 +1,4 @@
-"""RogeX – AI-Powered Document Intelligence & RAG Core Engine
+"""PDX – AI-Powered Document Intelligence & RAG Core Engine
 Complete Retrieval-Augmented Generation Pipeline with Strict Grounding and Google Gemini.
 """
 
@@ -627,7 +627,7 @@ class RAGEngine:
     """End-to-End Retrieval Augmented Generation Engine with Strict Grounding and Google Gemini."""
 
     STRICT_SYSTEM_INSTRUCTION = (
-        "You are RogeX, an advanced academic and professional AI Document Intelligence assistant.\n"
+        "You are PDX, an advanced academic and professional AI Document Intelligence assistant.\n"
         "Your task is to answer the user's question accurately, conversationally, and objectively, relying EXCLUSIVELY on the provided document excerpts.\n\n"
         "STRICT GROUNDING RULES:\n"
         "1. Answer using ONLY the provided document context excerpts.\n"
@@ -646,6 +646,17 @@ class RAGEngine:
         model_name: Optional[str] = None,
     ):
         self.vector_store = vector_store
+
+        # If api_key is explicitly passed as empty string, treat as unconfigured
+        if api_key == "":
+            self.api_key = ""
+            self.gemini_api_key = ""
+            self.provider = "gemini"
+            self.endpoint_url = None
+            self.model_name = model_name or os.getenv("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
+            self._genai_client = None
+            self._last_error = None
+            return
 
         # Multi-provider support: GroqCloud (gsk_...), xAI Grok (xai-...), or Google Gemini
         groq_candidate = (
@@ -1216,7 +1227,7 @@ class RAGEngine:
 
 # Self-test block when executed directly
 if __name__ == "__main__":
-    print("RogeX RAG Core Engine Loaded Successfully.")
+    print("PDX RAG Core Engine Loaded Successfully.")
     mgr = get_embedding_manager()
     print(f"Embedding Model: {mgr.model_name} (dim={mgr.dimension})")
     vstore = FAISSVectorStore(dimension=mgr.dimension)

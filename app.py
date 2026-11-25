@@ -1,4 +1,4 @@
-"""RogeX – AI-Powered Document Intelligence & RAG Chatbot
+"""PDX – AI-Powered Document Intelligence & RAG Chatbot
 "Your Documents. Your AI. Your Answers."
 
 A minimalist, ChatGPT-style conversational AI chatbot with strict document grounding,
@@ -34,7 +34,7 @@ from rag import (
 # 1. Page Configuration & Environment Setup
 # ------------------------------------------------------------------------------
 st.set_page_config(
-    page_title="RogeX – AI Document Chatbot",
+    page_title="PDX – AI Document Chatbot",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -505,13 +505,13 @@ rag_engine = RAGEngine(
 # 5. Sidebar Component (Branding, PDF Upload, Docs List, Settings)
 # ------------------------------------------------------------------------------
 with st.sidebar:
-    # 5.1 RogeX Branding
+    # 5.1 PDX Branding
     st.markdown(
         """
         <div class="rogex-brand">
-            <div class="rogex-logo">R</div>
+            <div class="rogex-logo">P</div>
             <div>
-                <div class="rogex-title">RogeX</div>
+                <div class="rogex-title">PDX</div>
                 <div class="rogex-tagline">Your Documents. Your AI. Your Answers.</div>
             </div>
         </div>
@@ -699,7 +699,7 @@ with st.sidebar:
     st.markdown(
         """
         <div style="font-size: 0.72rem; color: #999999; text-align: center; margin-top: 2rem;">
-            RogeX • Academic & Enterprise RAG
+            PDX • Academic & Enterprise RAG
         </div>
         """,
         unsafe_allow_html=True,
@@ -745,7 +745,7 @@ if len(st.session_state.messages) == 0:
     st.markdown(
         """
         <div class="chat-welcome-container">
-            <div class="chat-welcome-greeting">Hello, I'm RogeX.</div>
+            <div class="chat-welcome-greeting">Hello, I'm PDX.</div>
             <div class="chat-welcome-sub">What would you like to know about your documents?</div>
         </div>
         """,
@@ -844,7 +844,7 @@ for msg in st.session_state.messages:
         col_avatar, col_body = st.columns([1, 19])
         with col_avatar:
             st.markdown(
-                '<div class="assistant-avatar">R</div>',
+                '<div class="assistant-avatar">P</div>',
                 unsafe_allow_html=True,
             )
         with col_body:
@@ -915,7 +915,7 @@ if final_query:
     # 2. Execute RAG Query
     col_av, col_resp = st.columns([1, 19])
     with col_av:
-        st.markdown('<div class="assistant-avatar">R</div>', unsafe_allow_html=True)
+        st.markdown('<div class="assistant-avatar">P</div>', unsafe_allow_html=True)
 
     with col_resp:
         # Check if documents are indexed
