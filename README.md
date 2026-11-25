@@ -39,9 +39,11 @@
 ## 📌 1. Project Introduction & Problem Statement
 
 ### The Problem
+
 Traditional Large Language Models (LLMs) suffer from hallucinations, lack access to private enterprise documents, and often invent plausible-sounding facts and fictitious academic citations. Furthermore, existing document search tools often force users into complicated, cluttered dashboards full of unnecessary graphs, distraction-heavy animations, and confusing multi-page navigation when all the user wants is a simple, intuitive conversation with their documents.
 
 ### Project Objective
+
 **PDX** solves this problem by delivering a clean, minimalist, ChatGPT-style conversational AI experience powered by an actual, production-ready Retrieval-Augmented Generation (RAG) pipeline. Users can upload one or multiple PDF documents, ask questions in plain language, and receive accurate, intelligent answers grounded exclusively in their uploaded texts.
 
 ---
@@ -51,8 +53,11 @@ Traditional Large Language Models (LLMs) suffer from hallucinations, lack access
 PDX is engineered to use **Groq Cloud API** for ultra-fast, low-latency LLM inference powered by Groq's Language Processing Units (LPUs):
 
 * **Sub-Second Streaming**: Responses stream to the user in **~0.7 seconds**, eliminating waiting time.
+
 * **Primary Model (`qwen/qwen3.8-27b`)**: Delivers deep reasoning, accurate text summarization, and strict adherence to provided context without timeouts.
+
 * **Automatic Multi-Model Failover**: If a specific model experiences traffic latency, PDX seamlessly falls back between `qwen/qwen3.8-27b`, `openai/gpt-oss-20b`, and `openai/gpt-oss-120b`.
+
 * **Dual Provider Architecture**: Also supports Google Gemini via the official `google-genai` SDK (`gemini-3.8-flash`).
 
 ---
@@ -73,6 +78,7 @@ PDX is engineered to use **Groq Cloud API** for ultra-fast, low-latency LLM infe
   - *"Explain the important concepts."*
   - *"Find specific information."*
   - *"Generate questions from my document."*
+
 * **Multi-Document PDF Management**: Ingest multiple PDFs simultaneously with live page counts and chunk metrics. Remove individual documents with dynamic FAISS index rebuilding.
 
 * **Privacy-First Local Embeddings**: Uses HuggingFace `sentence-transformers/all-MiniLM-L6-v2` locally for zero API embedding costs, sub-millisecond retrieval, and complete document privacy.
@@ -126,16 +132,22 @@ flowchart TD
 
 1. **PDF Parsing & Ingestion**:
    When you upload a PDF, `PDFProcessor` reads raw bytes via `pypdf`, checks for encryption or corrupted streams, and extracts text page-by-page while preserving exact page indices and character counts.
+
 2. **Text Chunking**:
    `DocumentTextSplitter` leverages LangChain's `RecursiveCharacterTextSplitter` to segment text into 1000-character chunks with a 200-character overlap using hierarchical boundaries (`\n\n`, `\n`, sentence endings). Every chunk carries provenance metadata (`doc_id`, `source`, `page`, `chunk_index`).
+
 3. **Local Embedding Generation**:
    Chunks are embedded into 384-dimensional dense vectors using `sentence-transformers/all-MiniLM-L6-v2`. Vectors are $L_2$-normalized so that inner product computations in FAISS are mathematically identical to cosine similarity.
+
 4. **FAISS Vector Indexing**:
    Normalized vectors are stored in a `faiss.IndexFlatIP` index alongside the chunk metadata.
+
 5. **Similarity Retrieval**:
    When the user submits a question, PDX computes the question's query vector and executes a k-nearest neighbor search in FAISS, retrieving the top 4 most relevant chunks.
+
 6. **Strictly Grounded Synthesis**:
    If chunks exist, they are formatted into numbered document excerpts. Groq's high-speed API streams tokens back to the user with low temperature ($0.1$) to prevent hallucination.
+
 7. **Attribution Display**:
    Below the assistant's reply, an expandable source citations drawer displays the exact document filenames, page numbers, match percentages, and context quotes.
 
