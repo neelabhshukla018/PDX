@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environment & Credentials (NEVER COMMIT)
+.env
+.env.local
+*.key
+*.pem
+secrets.toml
+
+# RogeX Local Data & Vector Stores
+data/uploads/*
+!data/uploads/.gitkeep
+data/vectorstore/*
+!data/vectorstore/.gitkeep
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+*.swo
+
+
+
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Uploaded documents
+data/uploads/
+*.pdf
+
+data/test_vectorstore/
+
+# Vector database
+data/vectorstore/
+*.faiss
+*.pkl
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
