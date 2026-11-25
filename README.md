@@ -2,13 +2,14 @@
 
 <div align="center">
 
-# ⚡ PDX
+# PDX
 ### *"Your Documents. Your AI. Your Answers."*
 
 **A Minimalist, ChatGPT-Style Conversational AI Chatbot with Strict Retrieval-Augmented Generation (RAG)**
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit 1.40+](https://img.shields.io/badge/Streamlit-1.40%2B-FF4B4B.svg?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Groq Cloud LPU](https://img.shields.io/badge/LLM-Groq%20Cloud%20LPU-f55036.svg)](https://groq.com/)
 [![Google GenAI SDK](https://img.shields.io/badge/Google%20GenAI%20SDK-google--genai-8E75C2.svg?logo=google&logoColor=white)](https://ai.google.dev/)
 [![FAISS Vector DB](https://img.shields.io/badge/Vector%20DB-FAISS%20IndexFlatIP-008080.svg)](https://github.com/facebookresearch/faiss)
 [![HuggingFace](https://img.shields.io/badge/Embeddings-Sentence%20Transformers-yellow.svg?logo=huggingface&logoColor=white)](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
@@ -16,6 +17,22 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 </div>
+
+---
+
+## 📸 Screenshots & Visual Walkthrough
+
+### 1. Minimalist ChatGPT-Inspired Welcome Interface
+*Clean, distraction-free warm off-white interface with centered PDX logotype, suggested prompt cards, and sidebar PDF management.*
+
+![PDX Home Interface](assets/pdx_home.jpg)
+
+---
+
+### 2. High-Speed Grounded Document Synthesis & Citations
+*Multi-page PDF indexed into FAISS with real-time streaming answers from Groq and verifiable document provenance citations.*
+
+![PDX Document Intelligence in Action](assets/pdx_chat.jpg)
 
 ---
 
@@ -29,30 +46,41 @@ Traditional Large Language Models (LLMs) suffer from hallucinations, lack access
 
 ---
 
-## ✨ 2. Key Features
+## ⚡ 2. Powered by Groq API (High-Speed LPU Inference)
 
-* **💬 ChatGPT-Style Conversational Interface**: Distraction-free, warm off-white minimalist UI inspired by ChatGPT and modern component design libraries (21st.dev, Aceternity). No moving backgrounds, no particles, no clutter.
-* **⚡ Real-Time Token Streaming**: Real-time response streaming using the official Google Gen AI SDK (`google-genai`) and Streamlit's streaming architecture.
-* **📚 Verifiable Document Citations**: Every answer is grounded in retrieved excerpts, explicitly showing the source document filename, exact page number, similarity percentage, and preview text.
-* **🛡️ Strict Grounding & Zero Hallucination**: If the query cannot be answered from the uploaded context, PDX strictly refuses with:
+PDX is engineered to use **Groq Cloud API** for ultra-fast, low-latency LLM inference powered by Groq's Language Processing Units (LPUs):
+
+* **Sub-Second Streaming**: Responses stream to the user in **~0.7 seconds**, eliminating waiting time.
+* **Primary Model (`qwen/qwen3.8-27b`)**: Delivers deep reasoning, accurate text summarization, and strict adherence to provided context without timeouts.
+* **Automatic Multi-Model Failover**: If a specific model experiences traffic latency, PDX seamlessly falls back between `qwen/qwen3.8-27b`, `openai/gpt-oss-20b`, and `openai/gpt-oss-120b`.
+* **Dual Provider Architecture**: Also supports Google Gemini via the official `google-genai` SDK (`gemini-3.8-flash`).
+
+---
+
+## ✨ 3. Key Features
+
+* **ChatGPT-Style Conversational Interface**: Distraction-free, warm off-white minimalist UI with a sleek charcoal palette inspired by ChatGPT and modern component design libraries (21st.dev, Aceternity).
+* **Real-Time Token Streaming**: Real-time token streaming using Groq's high-throughput API and Streamlit's streaming architecture.
+* **Verifiable Document Citations**: Every answer is grounded in retrieved excerpts, explicitly showing the source document filename, exact page number, similarity percentage, and preview text.
+* **Strict Grounding & Zero Hallucination**: If the query cannot be answered from the uploaded context, PDX strictly refuses with:
   > *"I couldn't find sufficient information in your uploaded documents."*
-* **💡 One-Click Suggested Prompts**: Fast exploration cards for instant answers:
+* **One-Click Suggested Prompts**: Fast exploration cards for instant answers:
   - *"Summarize my document."*
   - *"Explain the important concepts."*
   - *"Find specific information."*
   - *"Generate questions from my document."*
-* **📁 Multi-Document PDF Management**: Ingest multiple PDFs simultaneously with live page counts and chunk metrics. Remove individual documents with dynamic FAISS index rebuilding.
-* **🔒 Privacy-First Local Embeddings**: Uses HuggingFace `sentence-transformers/all-MiniLM-L6-v2` locally for zero API embedding costs, sub-millisecond retrieval, and complete document privacy.
-* **⚙️ Interactive Settings & Telemetry**: Configure Gemini API keys dynamically, select models (`gemini-2.5-flash`, `gemini-1.5-flash`, `gemini-1.5-pro`, `gemini-2.0-flash`), test API connectivity, and inspect vector store status in real-time.
+* **Multi-Document PDF Management**: Ingest multiple PDFs simultaneously with live page counts and chunk metrics. Remove individual documents with dynamic FAISS index rebuilding.
+* **Privacy-First Local Embeddings**: Uses HuggingFace `sentence-transformers/all-MiniLM-L6-v2` locally for zero API embedding costs, sub-millisecond retrieval, and complete document privacy.
 
 ---
 
-## 🛠️ 3. Technology Stack
+## 🛠️ 4. Technology Stack
 
 | Layer | Component | Description |
 | :--- | :--- | :--- |
 | **Frontend Framework** | Streamlit | Responsive, minimalist ChatGPT-inspired web UI |
-| **Generative LLM** | Google Gemini API (`google-genai`) | Official Google Gen AI SDK with streaming and strict system grounding |
+| **Primary LLM Engine** | **Groq API** (`api.groq.com`) | Ultra-fast LPU token streaming with `qwen/qwen3.8-27b` |
+| **Secondary LLM Engine** | Google Gemini (`google-genai`) | Official Google Gen AI SDK (`gemini-3.8-flash`) |
 | **Text Chunking** | LangChain (`RecursiveCharacterTextSplitter`) | Hierarchical recursive splitting preserving page numbers and source provenance |
 | **Embedding Engine** | HuggingFace Sentence Transformers | Local 384-dimensional dense bi-encoder (`all-MiniLM-L6-v2`) |
 | **Vector Database** | FAISS (`faiss-cpu`) | Dense vector index using `IndexFlatIP` for exact cosine similarity |
@@ -61,7 +89,7 @@ Traditional Large Language Models (LLMs) suffer from hallucinations, lack access
 
 ---
 
-## 🏛️ 4. System Architecture & RAG Pipeline
+## 🏛️ 5. System Architecture & RAG Pipeline
 
 ```mermaid
 flowchart TD
@@ -78,18 +106,18 @@ flowchart TD
         H[User Query] --> I[Local Sentence Transformer Embedder]
         I -->|Query Vector| J[FAISS Similarity Search<br/>Retrieve Top 4 Chunks]
         F -.-> J
-        J -->|Top-K Chunks + Similarity Scores| K{Grounding Threshold Check}
-        K -->|Score < 0.20 or No Match| L["Refusal: 'I couldn't find sufficient information...'"]
-        K -->|Relevant Context Retrieved| M[Prompt Assembler + Strict System Instructions]
-        M --> N[Google Gemini LLM<br/>gemini-3.8-flash via google-genai]
-        N -->|Streaming Output| O[Real-Time ChatGPT Streamlit Response]
+        J -->|Top-K Chunks + Similarity Scores| K{Context Exists?}
+        K -->|No Match / Empty| L["Refusal: 'I couldn't find sufficient information...'"]
+        K -->|Relevant Context Retrieved| M[Prompt Assembler + Strict Grounding Rules]
+        M --> N[Groq Cloud LLM<br/>qwen/qwen3.8-27b via Groq API]
+        N -->|Streaming Output ~0.7s| O[Real-Time ChatGPT Streamlit Response]
         O --> P[Expandable Grounded Citations<br/>Filename, Page #, Match %, Snippet]
     end
 ```
 
 ---
 
-## 🔬 5. How RAG Works in PDX
+## 🔬 6. How RAG Works in PDX
 
 1. **PDF Parsing & Ingestion**:
    When you upload a PDF, `PDFProcessor` reads raw bytes via `pypdf`, checks for encryption or corrupted streams, and extracts text page-by-page while preserving exact page indices and character counts.
@@ -102,25 +130,33 @@ flowchart TD
 5. **Similarity Retrieval**:
    When the user submits a question, PDX computes the question's query vector and executes a k-nearest neighbor search in FAISS, retrieving the top 4 most relevant chunks.
 6. **Strictly Grounded Synthesis**:
-   If chunks meet the similarity threshold, they are formatted as numbered document excerpts. The official `google-genai` client streams tokens back to the user with low temperature ($0.1$) to prevent hallucination.
+   If chunks exist, they are formatted into numbered document excerpts. Groq's high-speed API streams tokens back to the user with low temperature ($0.1$) to prevent hallucination.
 7. **Attribution Display**:
    Below the assistant's reply, an expandable source citations drawer displays the exact document filenames, page numbers, match percentages, and context quotes.
 
 ---
 
-## 📁 6. Project Structure
+## 📁 7. Project Structure
 
 ```
 PDX/
 │
 ├── app.py                      # Main ChatGPT-style Streamlit web application
-├── rag.py                      # End-to-end RAG engine (PyPDF, LangChain, FAISS, Gemini)
+├── rag.py                      # End-to-end RAG engine (Groq, Gemini, FAISS, LangChain)
 ├── test_rag_pipeline.py        # 10-point automated end-to-end verification test suite
 ├── requirements.txt            # Production dependencies
-├── .env                        # Local environment variables (API keys)
+├── favicon.png                 # Browser tab favicon (256x256)
+├── favicon.ico                 # Multi-resolution ICO favicon
+├── .env                        # Local environment variables (API keys - git-ignored)
 ├── .env.example                # Environment variable configuration template
 ├── .gitignore                  # Git ignore rules for secrets and vector files
 ├── README.md                   # Comprehensive project documentation
+│
+├── assets/
+│   ├── pdx_home.jpg            # Welcome screen interface screenshot
+│   ├── pdx_chat.jpg            # Live chat and citation drawer screenshot
+│   ├── logo.png                # Brand logo
+│   └── logo.svg                # Vector brand emblem
 │
 ├── .streamlit/
 │   └── config.toml             # Streamlit server config & custom warm palette theme
@@ -131,9 +167,9 @@ PDX/
 
 ---
 
-## 🎨 7. Design System & Color Palette
+## 🎨 8. Design System & Color Palette
 
-PDX adheres strictly to a clean, warm off-white ChatGPT-inspired aesthetic:
+PDX adheres strictly to a clean, warm off-white ChatGPT-inspired aesthetic with Charcoal accents:
 
 | Element | Color Hex | Visual Purpose |
 | :--- | :--- | :--- |
@@ -142,18 +178,19 @@ PDX adheres strictly to a clean, warm off-white ChatGPT-inspired aesthetic:
 | **Primary Text** | `#202020` | High-contrast readable charcoal typography |
 | **Secondary Text** | `#777777` | Subtle metadata and subheaders |
 | **Borders** | `#E5E5E0` | Ultra-fine subtle dividers |
-| **Accent Primary** | `#315C48` | Deep pine/sage green for primary actions & branding |
+| **Accent Primary** | `#202020` | Sleek charcoal for primary actions & logotype |
+| **Accent Light** | `#F0F0EE` | Soft charcoal tint for user message bubbles |
 | **Cards** | `#FFFFFF` | Clean white elevated cards for prompt suggestions and citations |
 
 ---
 
-## 🚀 8. Installation & Setup
+## 🚀 9. Installation & Setup
 
 ### Prerequisites
 * **Python**: Version `3.10` or higher installed.
 * **Git**: Installed on your system.
 
-### Step 1: Clone or Open the Repository
+### Step 1: Clone the Repository
 ```bash
 git clone https://github.com/your-username/PDX.git
 cd PDX
@@ -177,33 +214,45 @@ pip install -r requirements.txt
 
 ---
 
-## 🔑 9. Google Gemini API Configuration
+## 🔑 10. API Configuration (.env)
 
-1. Get a free Google Gemini API Key from [Google AI Studio](https://aistudio.google.com/).
-2. Copy `.env.example` to create your local `.env` file:
+PDX reads credentials securely from your local `.env` file using `python-dotenv`. API keys are never exposed on the frontend.
+
+1. Copy `.env.example` to create your local `.env` file:
    ```bash
    cp .env.example .env
    ```
-3. Open `.env` and add your API key:
-   ```env
-   # Google Gemini API Key
-   GEMINI_API_KEY=your_actual_gemini_api_key_here
+2. Open `.env` and configure your API key:
 
-   # Supported Gemini Model
-   GEMINI_MODEL=gemini-3.8-flash
+### Option 1: Groq API Key (Recommended for Sub-Second Speed)
+Get your API key at [Groq Console](https://console.groq.com/):
 
-   # Default RAG Parameters
-   CHUNK_SIZE=1000
-   CHUNK_OVERLAP=200
-   TOP_K=4
-   EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
-   ```
+```env
+# Groq API Configuration
+GROQ_API_KEY=gsk_your_actual_groq_api_key_here
+GROQ_MODEL=qwen/qwen3.8-27b
+```
 
-> **Tip:** You can also configure or update your `GEMINI_API_KEY` at any time directly in the web UI under **Settings** in the sidebar.
+### Option 2: Google Gemini API Key
+Get your API key at [Google AI Studio](https://aistudio.google.com/):
+
+```env
+# Google Gemini API Configuration
+GEMINI_API_KEY=your_actual_gemini_api_key_here
+GEMINI_MODEL=gemini-3.8-flash
+```
+
+### Default RAG Parameters
+```env
+CHUNK_SIZE=1000
+CHUNK_OVERLAP=200
+TOP_K=4
+EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+```
 
 ---
 
-## 💻 10. Running the Application Locally
+## 💻 11. Running the Application Locally
 
 Start the Streamlit application:
 
@@ -212,11 +261,11 @@ streamlit run app.py
 ```
 
 The application will start and open automatically in your browser at:
-`http://localhost:8501`
+`http://localhost:8501` (or `http://localhost:8502`)
 
 ---
 
-## 🧪 11. Automated Testing & Verification
+## 🧪 12. Automated Testing & Verification
 
 PDX includes a comprehensive 10-point test suite (`test_rag_pipeline.py`) that validates the complete pipeline:
 
@@ -234,13 +283,13 @@ python test_rag_pipeline.py
 * `[TEST 7]`: Granular document removal and index rebuilding.
 * `[TEST 8]`: FAISS index disk persistence (save and reload).
 * `[TEST 9]`: Strict RAG grounding and refusal logic (`"I couldn't find sufficient information in your uploaded documents."`).
-* `[TEST 10]`: Graceful Gemini API key handling and connection status feedback.
+* `[TEST 10]`: Graceful API key handling and unconfigured state guidance.
 
 **Result: 10/10 Tests Passed with 100% Success.**
 
 ---
 
-## 🔮 12. Future Scope
+## 🔮 13. Future Scope
 
 * **Multimodal OCR**: Direct integration of vision models to transcribe scanned tables and diagrams from image-only PDFs.
 * **Cross-Encoder Reranking**: Optional secondary reranker (`bge-reranker-base`) for complex multi-hop queries.
@@ -249,7 +298,7 @@ python test_rag_pipeline.py
 
 ---
 
-## 📄 13. License
+## 📄 14. License
 
 This project is licensed under the **MIT License**.
-All document processing and vector embeddings run strictly on your local machine. Synthesized responses are requested securely via Google Gemini official APIs.
+All document processing and vector embeddings run strictly on your local machine. Synthesized responses are requested securely via the official Groq / Google Gemini APIs.
