@@ -679,7 +679,7 @@ class RAGEngine:
                     or os.getenv("GROK_MODEL", "")
                 )
                 if not user_m or "grok" in user_m.lower() or "gemini" in user_m.lower():
-                    self.model_name = "openai/gpt-oss-120b"
+                    self.model_name = "qwen/qwen3.8-27b"
                 else:
                     self.model_name = user_m
             else:
@@ -711,7 +711,7 @@ class RAGEngine:
         if clean_key.startswith("gsk_"):
             self.provider = "groq"
             self.endpoint_url = "https://api.groq.com/openai/v1/chat/completions"
-            self.model_name = "openai/gpt-oss-120b"
+            self.model_name = "qwen/qwen3.8-27b"
         elif clean_key.startswith("xai-"):
             self.provider = "grok"
             self.endpoint_url = "https://api.x.ai/v1/chat/completions"
@@ -811,71 +811,110 @@ class RAGEngine:
             return False, f"Connection failed: {err}"
 
     def _query_openai_compatible(self, prompt: str) -> str:
-        """Non-streaming query to OpenAI-compatible API (Groq or xAI)."""
+        """Non-streaming query to OpenAI-compatible API (Groq or xAI) with failover."""
         import requests
 
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}",
-        }
-        payload = {
-            "model": self.model_name,
-            "messages": [
-                {"role": "system", "content": self.STRICT_SYSTEM_INSTRUCTION},
-                {"role": "user", "content": prompt},
-            ],
-            "temperature": 0.1,
-            "stream": False,
-        }
-        resp = requests.post(
-            self.endpoint_url, headers=headers, json=payload, timeout=60
-        )
-        if resp.status_code != 200:
-            raise Exception(f"HTTP {resp.status_code}: {resp.text}")
-        data = resp.json()
-        return data["choices"][0]["message"]["content"].strip()
+        candidate_models = [self.model_name]
+        if self.provider == "groq":
+            for m in ["qwen/qwen3.8-27b", "openai/gpt-oss-20b", "openai/gpt-oss-120b"]:
+                if m not in candidate_models:
+                    candidate_models.append(m)
+
+        last_error = None
+        for model in candidate_models:
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+            }
+            payload = {
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": self.STRICT_SYSTEM_INSTRUCTION},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.1,
+                "stream": False,
+            }
+            try:
+                resp = requests.post(
+                    self.endpoint_url, headers=headers, json=payload, timeout=25
+                )
+                if resp.status_code != 200:
+                    last_error = Exception(f"HTTP {resp.status_code}: {resp.text}")
+                    continue
+                data = resp.json()
+                content = data["choices"][0]["message"]["content"].strip()
+                if content:
+                    return content
+            except Exception as e:
+                last_error = e
+                continue
+
+        if last_error:
+            raise last_error
+        return ""
 
     def _query_openai_compatible_stream(
         self, prompt: str
     ) -> Generator[str, None, None]:
-        """Streaming token generator from OpenAI-compatible API (Groq or xAI)."""
+        """Streaming token generator from OpenAI-compatible API (Groq or xAI) with failover."""
         import json
         import requests
 
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}",
-        }
-        payload = {
-            "model": self.model_name,
-            "messages": [
-                {"role": "system", "content": self.STRICT_SYSTEM_INSTRUCTION},
-                {"role": "user", "content": prompt},
-            ],
-            "temperature": 0.1,
-            "stream": True,
-        }
-        resp = requests.post(
-            self.endpoint_url, headers=headers, json=payload, stream=True, timeout=60
-        )
-        if resp.status_code != 200:
-            raise Exception(f"HTTP {resp.status_code}: {resp.text}")
+        candidate_models = [self.model_name]
+        if self.provider == "groq":
+            for m in ["qwen/qwen3.8-27b", "openai/gpt-oss-20b", "openai/gpt-oss-120b"]:
+                if m not in candidate_models:
+                    candidate_models.append(m)
 
-        for line in resp.iter_lines():
-            if line:
-                line_str = line.decode("utf-8")
-                if line_str.startswith("data: "):
-                    data_str = line_str[6:].strip()
-                    if data_str == "[DONE]":
-                        break
-                    try:
-                        chunk = json.loads(data_str)
-                        delta = chunk["choices"][0].get("delta", {})
-                        content = delta.get("content", "")
-                        if content:
-                            yield content
-                    except Exception:
-                        continue
+        last_error = None
+        for model in candidate_models:
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+            }
+            payload = {
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": self.STRICT_SYSTEM_INSTRUCTION},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.1,
+                "stream": True,
+            }
+            try:
+                resp = requests.post(
+                    self.endpoint_url, headers=headers, json=payload, stream=True, timeout=25
+                )
+                if resp.status_code != 200:
+                    last_error = Exception(f"HTTP {resp.status_code}: {resp.text}")
+                    continue
+
+                yielded_any = False
+                for line in resp.iter_lines():
+                    if line:
+                        line_str = line.decode("utf-8")
+                        if line_str.startswith("data: "):
+                            data_str = line_str[6:].strip()
+                            if data_str == "[DONE]":
+                                break
+                            try:
+                                chunk = json.loads(data_str)
+                                delta = chunk["choices"][0].get("delta", {})
+                                content = delta.get("content", "")
+                                if content:
+                                    yield content
+                                    yielded_any = True
+                            except Exception:
+                                continue
+                if yielded_any:
+                    return
+            except Exception as e:
+                last_error = e
+                continue
+
+        if last_error:
+            raise last_error
 
     def _format_context(self, search_results: List[SearchResult]) -> str:
         """Format retrieved chunks into clean, numbered context blocks."""
