@@ -12,6 +12,7 @@ from typing import Any, Dict, List
 
 import streamlit as st
 from dotenv import load_dotenv
+from PIL import Image
 
 from rag import (
     DEFAULT_CHUNK_OVERLAP,
@@ -33,14 +34,22 @@ from rag import (
 # ------------------------------------------------------------------------------
 # 1. Page Configuration & Environment Setup
 # ------------------------------------------------------------------------------
+BASE_DIR = Path(__file__).resolve().parent
+FAVICON_PATH = BASE_DIR / "favicon.png"
+fav_img = None
+if FAVICON_PATH.exists():
+    try:
+        fav_img = Image.open(FAVICON_PATH)
+    except Exception:
+        fav_img = None
+
 st.set_page_config(
     page_title="PDX – AI Document Chatbot",
-    page_icon=None,
+    page_icon=fav_img or "favicon.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-BASE_DIR = Path(__file__).resolve().parent
 ENV_PATH = BASE_DIR / ".env"
 if ENV_PATH.exists():
     load_dotenv(dotenv_path=ENV_PATH)
@@ -124,45 +133,30 @@ def inject_custom_css():
             height: 2.5rem !important;
         }
 
-        /* RogeX Brand Header */
-        .rogex-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
+        /* PDX Centered Logotype Header */
+        .pdx-brand {
+            text-align: center;
+            padding: 0.6rem 0 1.2rem 0;
+            margin-bottom: 1.1rem;
             border-bottom: 1px solid var(--border-color);
         }
 
-        .rogex-logo {
-            width: 38px;
-            height: 38px;
-            background: var(--accent-primary);
-            color: #FFFFFF;
-            border-radius: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: -0.5px;
-            box-shadow: 0 2px 4px rgba(49, 92, 72, 0.15);
-        }
-
-        .rogex-title {
-            font-size: 1.25rem;
-            font-weight: 700;
+        .pdx-logotype {
+            font-size: 2.6rem;
+            font-weight: 800;
             color: var(--text-primary);
-            line-height: 1.1;
-            letter-spacing: -0.5px;
+            line-height: 1.0;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.45rem;
         }
 
-        .rogex-tagline {
-            font-size: 0.73rem;
+        .pdx-tagline {
+            font-size: 0.74rem;
             color: var(--text-secondary);
             font-weight: 500;
-            letter-spacing: 0.01em;
-            margin-top: 2px;
+            letter-spacing: 0.02em;
+            line-height: 1.35;
         }
 
         /* Action Buttons */
@@ -514,14 +508,12 @@ rag_engine = RAGEngine(
 # 5. Sidebar Component (Branding, PDF Upload, Docs List, Settings)
 # ------------------------------------------------------------------------------
 with st.sidebar:
-    # 5.1 PDX Branding
+    # 5.1 PDX Branding (Centered Big Logotype)
     st.markdown(
         """
-        <div class="rogex-brand">
-            <div>
-                <div class="rogex-title">PDX</div>
-                <div class="rogex-tagline">Your Documents. Your AI. Your Answers.</div>
-            </div>
+        <div class="pdx-brand">
+            <div class="pdx-logotype">PDX</div>
+            <div class="pdx-tagline">Your Documents. Your AI. Your Answers.</div>
         </div>
         """,
         unsafe_allow_html=True,
