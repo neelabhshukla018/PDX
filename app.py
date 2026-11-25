@@ -110,9 +110,18 @@ def inject_custom_css():
             padding-bottom: 2rem !important;
         }
 
+        /* Main Content Styling - Shifted Upwards */
+        .main div.block-container {
+            padding-top: 1.2rem !important;
+            padding-bottom: 2.5rem !important;
+            max-width: 840px !important;
+            margin: 0 auto !important;
+        }
+
         /* Clean Header */
         header[data-testid="stHeader"] {
             background-color: transparent !important;
+            height: 2.5rem !important;
         }
 
         /* RogeX Brand Header */
@@ -247,26 +256,26 @@ def inject_custom_css():
             border-color: #FECACA;
         }
 
-        /* Welcome Screen Hero */
+        /* Welcome Screen Hero - Compact & Shifted Up */
         .chat-welcome-container {
             max-width: 780px;
-            margin: 2.5rem auto 1.5rem auto;
+            margin: 0.4rem auto 0.8rem auto;
             text-align: center;
         }
 
         .chat-welcome-greeting {
-            font-size: 2.2rem;
+            font-size: 2.0rem;
             font-weight: 700;
             color: var(--text-primary);
             letter-spacing: -0.03em;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.2rem;
         }
 
         .chat-welcome-sub {
-            font-size: 1.1rem;
+            font-size: 0.98rem;
             color: var(--text-secondary);
             font-weight: 400;
-            margin-bottom: 2rem;
+            margin-bottom: 1.1rem;
         }
 
         /* Suggested Prompt Cards (21st.dev / Aceternity style) */
@@ -274,7 +283,7 @@ def inject_custom_css():
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 16px 18px;
+            padding: 12px 16px;
             text-align: left;
             cursor: pointer;
             transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
@@ -655,7 +664,7 @@ with st.sidebar:
 
     # 5.5 Clear Conversation Button
     if len(st.session_state.messages) > 0:
-        st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
         if st.button("Clear Conversation", use_container_width=True, type="secondary"):
             st.session_state.messages = []
             st.session_state.pending_query = None
@@ -735,7 +744,7 @@ if len(st.session_state.messages) == 0:
             st.session_state.pending_query = "Summarize my document."
             st.rerun()
 
-        st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
 
         st.markdown(
             """
@@ -764,7 +773,7 @@ if len(st.session_state.messages) == 0:
             st.session_state.pending_query = "Find specific information."
             st.rerun()
 
-        st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
 
         st.markdown(
             """
@@ -780,10 +789,10 @@ if len(st.session_state.messages) == 0:
             st.rerun()
 
     if total_docs == 0:
-        st.markdown("<div style='height: 24px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         st.info("**Getting Started**: Upload one or more PDF documents in the sidebar, then ask any question.")
 
-st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
+st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
 
 # 6.4 Render Conversation History
 for msg in st.session_state.messages:
