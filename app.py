@@ -87,9 +87,9 @@ def inject_custom_css():
             --text-primary: #202020;
             --text-secondary: #777777;
             --border-color: #E5E5E0;
-            --accent-primary: #315C48;
-            --accent-light: #EBF0ED;
-            --accent-hover: #264939;
+            --accent-primary: #202020;
+            --accent-light: #F0F0EE;
+            --accent-hover: #000000;
         }
 
         /* Global App Styling */
@@ -174,7 +174,7 @@ def inject_custom_css():
         .stButton button[kind="primary"]:hover {
             background-color: var(--accent-hover) !important;
             border-color: var(--accent-hover) !important;
-            box-shadow: 0 2px 6px rgba(49, 92, 72, 0.2) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18) !important;
         }
 
         .stButton button[kind="secondary"] {
@@ -286,7 +286,7 @@ def inject_custom_css():
             border-color: var(--accent-primary);
             background: #FCFCFB;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(49, 92, 72, 0.06);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
 
         .prompt-card-icon {
@@ -333,7 +333,7 @@ def inject_custom_css():
         .user-message-bubble {
             background-color: var(--accent-light);
             color: var(--text-primary);
-            border: 1px solid #D6E4DC;
+            border: 1px solid #E2E2DE;
             border-radius: 16px 16px 4px 16px;
             padding: 12px 18px;
             max-width: 78%;
@@ -432,7 +432,7 @@ def inject_custom_css():
 
         div[data-testid="stChatInput"]:focus-within {
             border-color: var(--accent-primary) !important;
-            box-shadow: 0 4px 16px rgba(49, 92, 72, 0.08) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10) !important;
         }
         </style>
         """,
@@ -519,7 +519,7 @@ with st.sidebar:
     )
 
     # 5.2 Primary Action: New Chat Button
-    if st.button("New Chat", use_container_width=True, type="primary"):
+    if st.button("+ New Chat", use_container_width=True, type="primary"):
         st.session_state.messages = []
         st.session_state.pending_query = None
         st.rerun()
@@ -694,7 +694,7 @@ if total_docs > 0 and len(st.session_state.messages) == 0:
         f"""
         <div class="doc-status-banner">
             <div>
-                <span style="font-weight: 600; color: #315C48;">Indexed Documents:</span>
+                <span style="font-weight: 600; color: var(--accent-primary);">Indexed Documents:</span>
                 <span style="color: #202020; margin-left: 4px;">{doc_names_preview}</span>
                 <span style="color: #777777; font-size: 0.82rem; margin-left: 8px;">({total_chunks} chunks ready)</span>
             </div>
