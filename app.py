@@ -35,7 +35,7 @@ from rag import (
 # ------------------------------------------------------------------------------
 st.set_page_config(
     page_title="PDX – AI Document Chatbot",
-    page_icon="⚡",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -509,7 +509,6 @@ with st.sidebar:
     st.markdown(
         """
         <div class="rogex-brand">
-            <div class="rogex-logo">P</div>
             <div>
                 <div class="rogex-title">PDX</div>
                 <div class="rogex-tagline">Your Documents. Your AI. Your Answers.</div>
@@ -520,7 +519,7 @@ with st.sidebar:
     )
 
     # 5.2 Primary Action: New Chat Button
-    if st.button("➕ New Chat", use_container_width=True, type="primary"):
+    if st.button("New Chat", use_container_width=True, type="primary"):
         st.session_state.messages = []
         st.session_state.pending_query = None
         st.rerun()
@@ -566,12 +565,12 @@ with st.sidebar:
                     )
 
                     if processed_doc.error:
-                        st.error(f"❌ {filename}: {processed_doc.error}")
+                        st.error(f"{filename}: {processed_doc.error}")
                         continue
 
                     if processed_doc.is_empty:
                         st.warning(
-                            f"⚠️ {filename}: No selectable text detected in PDF."
+                            f"{filename}: No selectable text detected in PDF."
                         )
                         continue
 
@@ -579,7 +578,7 @@ with st.sidebar:
                     chunks = splitter.split_processed_document(processed_doc)
                     if not chunks:
                         st.warning(
-                            f"⚠️ {filename}: Could not extract readable chunks."
+                            f"{filename}: Could not extract readable chunks."
                         )
                         continue
 
@@ -626,7 +625,7 @@ with st.sidebar:
                     f"""
                     <div class="doc-item-card">
                         <div style="overflow: hidden;">
-                            <div class="doc-name" title="{fname}">📄 {fname}</div>
+                            <div class="doc-name" title="{fname}">{fname}</div>
                             <div class="doc-meta">{pgs} pages • {chks} chunks • {sz}</div>
                         </div>
                     </div>
@@ -635,7 +634,7 @@ with st.sidebar:
                 )
             with col_del:
                 st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
-                if st.button("✕", key=f"del_{doc_id}", help=f"Remove '{fname}'"):
+                if st.button("x", key=f"del_{doc_id}", help=f"Remove '{fname}'"):
                     docs_to_remove.append((doc_id, doc_meta["filename"]))
 
         if docs_to_remove:
@@ -657,43 +656,10 @@ with st.sidebar:
     # 5.5 Clear Conversation Button
     if len(st.session_state.messages) > 0:
         st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
-        if st.button("🗑️ Clear Conversation", use_container_width=True, type="secondary"):
+        if st.button("Clear Conversation", use_container_width=True, type="secondary"):
             st.session_state.messages = []
             st.session_state.pending_query = None
             st.rerun()
-
-    st.markdown("<hr style='border: none; border-top: 1px solid #E5E5E0; margin: 1.2rem 0;' />", unsafe_allow_html=True)
-
-    # 5.6 AI Connection Status Badge
-    provider_label = getattr(rag_engine, "provider", "ai").upper()
-    st.markdown(
-        f"<span style='font-size: 0.78rem; font-weight: 700; color: #777777; text-transform: uppercase; letter-spacing: 0.05em;'>{provider_label} STATUS</span>",
-        unsafe_allow_html=True,
-    )
-
-    is_ai_ready = rag_engine.is_configured()
-    active_model = rag_engine.model_name
-    display_provider = getattr(rag_engine, "provider", "AI").capitalize()
-
-    if is_ai_ready:
-        st.markdown(
-            f"""
-            <div class="status-badge connected" style="width: 100%; margin-top: 6px;">
-                <span>●</span> Connected ({display_provider}: {active_model})
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            """
-            <div class="status-badge warning" style="width: 100%; margin-top: 6px;">
-                <span>○</span> AI Key Required (.env)
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
 
     # 5.8 Footer
     st.markdown(
@@ -712,7 +678,7 @@ with st.sidebar:
 
 # 6.1 Upload Success Notification Banner
 if st.session_state.upload_success_banner:
-    st.success(f"✅ {st.session_state.upload_success_banner}")
+    st.success(f"{st.session_state.upload_success_banner}")
     st.session_state.upload_success_banner = None
 
 # 6.2 Status Banner when documents are indexed
@@ -728,7 +694,7 @@ if total_docs > 0 and len(st.session_state.messages) == 0:
         f"""
         <div class="doc-status-banner">
             <div>
-                <span style="font-weight: 600; color: #315C48;">📚 Indexed Documents:</span>
+                <span style="font-weight: 600; color: #315C48;">Indexed Documents:</span>
                 <span style="color: #202020; margin-left: 4px;">{doc_names_preview}</span>
                 <span style="color: #777777; font-size: 0.82rem; margin-left: 8px;">({total_chunks} chunks ready)</span>
             </div>
@@ -759,7 +725,6 @@ if len(st.session_state.messages) == 0:
         st.markdown(
             """
             <div class="prompt-card">
-                <span class="prompt-card-icon">📄</span>
                 <div class="prompt-card-title">Summarize my document</div>
                 <div class="prompt-card-desc">Get an executive synthesis of core conclusions, thesis, and results.</div>
             </div>
@@ -775,7 +740,6 @@ if len(st.session_state.messages) == 0:
         st.markdown(
             """
             <div class="prompt-card">
-                <span class="prompt-card-icon">💡</span>
                 <div class="prompt-card-title">Explain important concepts</div>
                 <div class="prompt-card-desc">Break down technical definitions, frameworks, and methodologies.</div>
             </div>
@@ -790,7 +754,6 @@ if len(st.session_state.messages) == 0:
         st.markdown(
             """
             <div class="prompt-card">
-                <span class="prompt-card-icon">🔍</span>
                 <div class="prompt-card-title">Find specific information</div>
                 <div class="prompt-card-desc">Retrieve precise metrics, formulas, dates, or citations.</div>
             </div>
@@ -806,7 +769,6 @@ if len(st.session_state.messages) == 0:
         st.markdown(
             """
             <div class="prompt-card">
-                <span class="prompt-card-icon">❓</span>
                 <div class="prompt-card-title">Generate questions from document</div>
                 <div class="prompt-card-desc">Formulate study questions and review prompts to test comprehension.</div>
             </div>
@@ -819,7 +781,7 @@ if len(st.session_state.messages) == 0:
 
     if total_docs == 0:
         st.markdown("<div style='height: 24px;'></div>", unsafe_allow_html=True)
-        st.info("💡 **Getting Started**: Upload one or more PDF documents in the sidebar, then ask any question.")
+        st.info("**Getting Started**: Upload one or more PDF documents in the sidebar, then ask any question.")
 
 st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
 
@@ -855,7 +817,7 @@ for msg in st.session_state.messages:
 
             # Render Grounded Sources & Citations
             if sources:
-                with st.expander(f"📚 Sources & Document Citations ({len(sources)})", expanded=False):
+                with st.expander(f"Sources & Document Citations ({len(sources)})", expanded=False):
                     for idx, src in enumerate(sources, start=1):
                         source_doc = src.get("source", "Document")
                         page_num = src.get("page", 1)
@@ -866,7 +828,7 @@ for msg in st.session_state.messages:
                         st.markdown(
                             f"""
                             <div class="citation-pill">
-                                📄 {source_doc} &bull; Page {page_num} &bull; {pct}% Match
+                                {source_doc} &bull; Page {page_num} &bull; {pct}% Match
                             </div>
                             <div class="citation-snippet">
                                 "{truncate_snippet(snippet, 260)}"
@@ -921,7 +883,7 @@ if final_query:
         # Check if documents are indexed
         if vector_store.is_empty():
             no_docs_reply = (
-                "⚠️ **No documents are currently indexed.**\n\n"
+                "**No documents are currently indexed.**\n\n"
                 "Please upload one or more PDF documents in the sidebar so I can answer questions about their content."
             )
             st.markdown(no_docs_reply)
@@ -946,7 +908,7 @@ if final_query:
                     p_name = "Groq" if active_p == "groq" else ("Grok" if active_p == "grok" else "Google Gemini")
                     k_name = "GROQ_API_KEY" if active_p == "groq" else ("GROK_API_KEY" if active_p == "grok" else "GEMINI_API_KEY")
                     answer_text = (
-                        f"⚠️ **{p_name} API Key Required**\n\n"
+                        f"**{p_name} API Key Required**\n\n"
                         f"I successfully retrieved relevant excerpts from your documents, but an API Key "
                         f"is required to synthesize an intelligent answer.\n\n"
                         f"Please configure your `{k_name}` in the local `.env` file."
@@ -987,13 +949,13 @@ if final_query:
 
                 # Show sources immediately under streaming response
                 if citations_data:
-                    with st.expander(f"📚 Sources & Document Citations ({len(citations_data)})", expanded=False):
+                    with st.expander(f"Sources & Document Citations ({len(citations_data)})", expanded=False):
                         for c in citations_data:
                             pct = int(c["score"] * 100) if c["score"] <= 1.0 else 100
                             st.markdown(
                                 f"""
                                 <div class="citation-pill">
-                                    📄 {c['source']} &bull; Page {c['page']} &bull; {pct}% Match
+                                    {c['source']} &bull; Page {c['page']} &bull; {pct}% Match
                                 </div>
                                 <div class="citation-snippet">
                                     "{truncate_snippet(c['snippet'], 260)}"

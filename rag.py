@@ -1014,7 +1014,7 @@ class RAGEngine:
             return RAGResponse(
                 query=question,
                 answer=(
-                    f"⚠️ **{provider_name} API Key Required**\n\n"
+                    f"**{provider_name} API Key Required**\n\n"
                     f"Context was successfully retrieved from your uploaded documents, but a valid API Key is required to synthesize the answer.\n\n"
                     f"Please configure your `{key_name}` in the local `.env` file."
                 ),
@@ -1044,7 +1044,7 @@ class RAGEngine:
                 provider_title = self.provider.capitalize()
                 return RAGResponse(
                     query=question,
-                    answer=f"⚠️ **{provider_title} Generation Error**\n\n{str(e)}",
+                    answer=f"**{provider_title} Generation Error**\n\n{str(e)}",
                     sources=citations,
                     status="error",
                     model_name=self.model_name,
@@ -1101,7 +1101,7 @@ class RAGEngine:
         error_msg = self._humanize_error(last_error or Exception("Synthesis failed"))
         return RAGResponse(
             query=question,
-            answer=f"⚠️ **Gemini Generation Error**\n\n{error_msg}",
+            answer=f"**Gemini Generation Error**\n\n{error_msg}",
             sources=citations,
             status="error",
             model_name=self.model_name,
@@ -1127,7 +1127,7 @@ class RAGEngine:
             provider_name = "Grok" if self.provider == "grok" else "Google Gemini"
             key_name = "GROK_API_KEY" if self.provider == "grok" else "GEMINI_API_KEY"
             yield (
-                f"⚠️ **{provider_name} API Key Required**\n\n"
+                f"**{provider_name} API Key Required**\n\n"
                 f"Context was successfully retrieved from your uploaded documents, but a valid API Key is required to synthesize the answer.\n\n"
                 f"Please configure your `{key_name}` in the local `.env` file."
             )
@@ -1148,7 +1148,7 @@ class RAGEngine:
                 return citations
             except Exception as e:
                 provider_title = self.provider.capitalize()
-                yield f"⚠️ **{provider_title} Generation Error**\n\n{str(e)}"
+                yield f"**{provider_title} Generation Error**\n\n{str(e)}"
                 return citations
 
         # Automatic failover candidates for high-traffic spikes (HTTP 503 / 429)
@@ -1199,7 +1199,7 @@ class RAGEngine:
                     else:
                         break
 
-        yield f"⚠️ **Gemini Generation Error**\n\n{self._humanize_error(last_error or Exception('Generation failed'))}"
+        yield f"**Gemini Generation Error**\n\n{self._humanize_error(last_error or Exception('Generation failed'))}"
         return citations
 
     def _humanize_error(self, e: Exception) -> str:
